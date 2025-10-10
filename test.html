@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Timezone Functionality</title>
+    <script>
+        // Clear localStorage to start fresh
+        function clearStorage() {
+            localStorage.removeItem('timezones');
+            console.log('LocalStorage cleared');
+            alert('LocalStorage cleared! Please refresh the main page.');
+        }
+
+        // Check what's in localStorage
+        function checkStorage() {
+            const saved = localStorage.getItem('timezones');
+            console.log('Current saved timezones:', saved);
+            document.getElementById('result').textContent = saved || 'No timezones saved';
+        }
+    </script>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h1>Timezone Tracker - Debug Tool</h1>
+
+    <button onclick="clearStorage()" style="padding: 10px 20px; margin: 10px; cursor: pointer;">
+        Clear LocalStorage
+    </button>
+
+    <button onclick="checkStorage()" style="padding: 10px 20px; margin: 10px; cursor: pointer;">
+        Check LocalStorage
+    </button>
+
+    <div id="result" style="margin-top: 20px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+        Click "Check LocalStorage" to see saved data
+    </div>
+
+    <hr>
+    <p><a href="/">Back to Timezone Tracker</a></p>
+</body>
+</html>

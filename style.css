@@ -1,0 +1,706 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Luxury Deep Blue Palette */
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #0d1117;
+    --bg-card: rgba(15, 23, 42, 0.6);
+    --bg-card-hover: rgba(15, 23, 42, 0.85);
+
+    /* Gold & Champagne Accents */
+    --accent-gold: #d4af37;
+    --accent-champagne: #e8d5b7;
+    --accent-light-gold: #f4e4c1;
+
+    /* Cyan Blue Highlights */
+    --accent-cyan: #4facfe;
+    --accent-bright-cyan: #00f2fe;
+
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Borders & Dividers */
+    --border-subtle: rgba(148, 163, 184, 0.08);
+    --border-highlight: rgba(79, 172, 254, 0.3);
+
+    /* Shadows & Glows */
+    --shadow-subtle: 0 2px 20px rgba(0, 0, 0, 0.4);
+    --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.5);
+    --glow-cyan: 0 0 30px rgba(79, 172, 254, 0.4);
+    --glow-gold: 0 0 25px rgba(212, 175, 55, 0.3);
+}
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    background-image:
+        radial-gradient(at 10% 20%, rgba(79, 172, 254, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(212, 175, 55, 0.03) 0px, transparent 50%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    padding: 3rem 2rem;
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header - Minimalist Luxury */
+header {
+    text-align: center;
+    margin-bottom: 5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border-subtle);
+    animation: fadeInDown 1s ease-out;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Controls - Refined Input */
+.controls {
+    margin-bottom: 4rem;
+    animation: fadeIn 1.2s ease-out;
+}
+
+.add-timezone {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.searchable-select-container {
+    position: relative;
+    min-width: 400px;
+}
+
+.timezone-search-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    width: 100%;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+}
+
+.timezone-search-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 300;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.timezone-search-input:hover {
+    border-color: var(--border-highlight);
+    background: var(--bg-card-hover);
+}
+
+.timezone-search-input:focus {
+    border-color: var(--accent-cyan);
+    background: var(--bg-card-hover);
+    box-shadow: var(--glow-cyan);
+}
+
+/* Dropdown - Elegant List */
+.timezone-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none;
+    box-shadow: var(--shadow-elevated);
+}
+
+.timezone-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.timezone-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.timezone-dropdown::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: 3px;
+}
+
+.timezone-dropdown::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
+
+.dropdown-item {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: var(--bg-card);
+    padding-left: 1.75rem;
+}
+
+.dropdown-item.no-results {
+    cursor: default;
+    color: var(--text-muted);
+    justify-content: center;
+}
+
+.dropdown-item.no-results:hover {
+    background: transparent;
+    padding-left: 1.5rem;
+}
+
+.dropdown-country {
+    font-weight: 400;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dropdown-utc {
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Buttons - Premium Feel */
+.btn-primary, .btn-secondary {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-bright-cyan) 100%);
+    color: var(--bg-primary);
+    box-shadow: var(--shadow-subtle);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-cyan);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-gold);
+}
+
+/* Timezone Grid - Luxury Cards */
+.timezones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    animation: fadeIn 1.4s ease-out;
+}
+
+.timezone-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideIn 0.6s ease-out;
+    overflow: hidden;
+}
+
+.timezone-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.timezone-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-highlight);
+    box-shadow: var(--shadow-elevated);
+    background: var(--bg-card-hover);
+}
+
+.timezone-card:hover::before {
+    opacity: 1;
+}
+
+.timezone-card.highlight {
+    border-color: var(--accent-gold);
+    box-shadow: var(--glow-gold);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.timezone-card.highlight::before {
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+.timezone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.timezone-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-champagne) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.95;
+}
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.time-display {
+    font-size: 3.5rem;
+    font-weight: 200;
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-bright-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.date-display {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+}
+
+.timezone-info {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.offset-display {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+    color: var(--accent-gold);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    letter-spacing: 0.05em;
+}
+
+.time-diff {
+    display: inline-block;
+    background: rgba(79, 172, 254, 0.1);
+    color: var(--accent-cyan);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    letter-spacing: 0.02em;
+}
+
+.status-indicator {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+}
+
+.status-working {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.status-evening {
+    background: rgba(251, 146, 60, 0.1);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+.status-night {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.status-morning {
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+/* Time Converter - Sophisticated Section */
+.time-converter {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2.5rem;
+    animation: fadeIn 1.6s ease-out;
+}
+
+.time-converter h2 {
+    font-size: 1.75rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+}
+
+.converter-controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.converter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.converter-group label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 300;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: 0.02em;
+}
+
+input[type="time"], .converter-select {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    outline: none;
+    width: 100%;
+}
+
+input[type="time"]:hover, .converter-select:hover {
+    border-color: var(--border-highlight);
+}
+
+input[type="time"]:focus, .converter-select:focus {
+    border-color: var(--accent-gold);
+    box-shadow: var(--glow-gold);
+}
+
+.time-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.conversion-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.conversion-result-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.conversion-result-item:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle);
+}
+
+.result-location {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-champagne);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.result-time {
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: var(--accent-cyan);
+    margin-bottom: 0.25rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.result-date {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: var(--glow-gold);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 2rem 1rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+    }
+
+    .timezones-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .add-timezone {
+        flex-direction: column;
+    }
+
+    .searchable-select-container {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .time-display {
+        font-size: 2.5rem;
+    }
+
+    .time-converter {
+        padding: 1.5rem;
+    }
+
+    .time-converter h2 {
+        font-size: 1.5rem;
+    }
+
+    .converter-controls {
+        flex-direction: column;
+    }
+
+    .conversion-results {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .timezone-card {
+        padding: 1.5rem;
+    }
+
+    .time-display {
+        font-size: 2rem;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+    background: var(--accent-cyan);
+    color: var(--bg-primary);
+}
+
+::-moz-selection {
+    background: var(--accent-cyan);
+    color: var(--bg-primary);
+}

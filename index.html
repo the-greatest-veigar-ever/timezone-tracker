@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Time Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Global Time Tracker</h1>
+            <p class="subtitle">Synchronize across timezones</p>
+        </header>
+
+        <div class="controls">
+            <div class="add-timezone">
+                <div class="searchable-select-container">
+                    <input type="text" id="timezoneSearch" class="timezone-search-input" placeholder="Search country or timezone...">
+                    <div id="timezoneDropdown" class="timezone-dropdown"></div>
+                </div>
+                <button id="addBtn" class="btn-primary">Add Timezone</button>
+            </div>
+        </div>
+
+        <div id="timezonesGrid" class="timezones-grid"></div>
+
+        <div class="time-converter">
+            <h2>Time Converter</h2>
+            <div class="converter-controls">
+                <div class="converter-group">
+                    <label for="converterTime">Convert this time:</label>
+                    <input type="time" id="converterTime" class="time-input">
+                </div>
+                <div class="converter-group">
+                    <label for="converterTimezone">From timezone:</label>
+                    <select id="converterTimezone" class="converter-select"></select>
+                </div>
+                <button id="convertBtn" class="btn-secondary">Convert Time</button>
+            </div>
+            <div id="conversionResults" class="conversion-results"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
