@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,12 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -20,27 +24,42 @@
         <div class="controls">
             <div class="add-timezone">
                 <div class="searchable-select-container">
-                    <input type="text" id="timezoneSearch" class="timezone-search-input" placeholder="Search country or timezone...">
+                    <input type="text" id="timezoneSearch" class="timezone-search-input"
+                        placeholder="Search country or timezone...">
                     <div id="timezoneDropdown" class="timezone-dropdown"></div>
                 </div>
-                <button id="addBtn" class="btn-primary">Add Timezone</button>
+                <button id="addBtn" class="btn-primary"><i class="ph ph-plus"></i> Add Timezone</button>
+            </div>
+
+            <div class="time-travel-container">
+                <div class="time-travel-header">
+                    <span class="time-travel-label"><i class="ph ph-clock-counter-clockwise"></i> Time Travel</span>
+                    <button id="resetTimeBtn" class="btn-text"><i class="ph ph-arrow-counter-clockwise"></i> Reset to
+                        Now</button>
+                </div>
+                <input type="range" id="timeSlider" min="-720" max="720" value="0" step="15" class="time-slider">
+                <div class="time-travel-display" id="timeTravelDisplay">Offset: 0h 0m</div>
             </div>
         </div>
 
         <div id="timezonesGrid" class="timezones-grid"></div>
 
         <div class="time-converter">
-            <h2>Time Converter</h2>
+            <h2>Time Converter <i class="ph ph-info info-icon" title="Click for info"></i></h2>
             <div class="converter-controls">
                 <div class="converter-group">
                     <label for="converterTime">Convert this time:</label>
-                    <input type="time" id="converterTime" class="time-input">
+                    <div class="input-icon-wrapper">
+                        <i class="ph ph-clock"></i>
+                        <input type="time" id="converterTime" class="time-input">
+                    </div>
                 </div>
                 <div class="converter-group">
                     <label for="converterTimezone">From timezone:</label>
                     <select id="converterTimezone" class="converter-select"></select>
                 </div>
-                <button id="convertBtn" class="btn-secondary">Convert Time</button>
+                <button id="convertBtn" class="btn-secondary"><i class="ph ph-arrows-left-right"></i> Convert
+                    Time</button>
             </div>
             <div id="conversionResults" class="conversion-results"></div>
         </div>
@@ -48,4 +67,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -527,6 +527,7 @@ class TimezoneTracker {
         this.timezones = [];
         this.updateInterval = null;
         this.selectedTimezoneValue = null;
+        this.timeOffset = 0; // Offset in minutes
         this.init();
     }
 
@@ -572,6 +573,45 @@ class TimezoneTracker {
 
         // Update converter timezone dropdown
         this.updateConverterDropdown();
+
+        // Info Icon Tooltip
+        const infoIcon = document.querySelector('.info-icon');
+        if (infoIcon) {
+            infoIcon.addEventListener('click', () => {
+                this.showNotification('Convert a time from one timezone to all others to find the best meeting slot.');
+            });
+        }
+
+        // Time Travel Listeners
+        const timeSlider = document.getElementById('timeSlider');
+        const resetTimeBtn = document.getElementById('resetTimeBtn');
+
+        timeSlider.addEventListener('input', (e) => {
+            this.timeOffset = parseInt(e.target.value);
+            this.updateTimeTravelDisplay();
+            this.updateAllTimezones();
+        });
+
+        resetTimeBtn.addEventListener('click', () => {
+            this.timeOffset = 0;
+            timeSlider.value = 0;
+            this.updateTimeTravelDisplay();
+            this.updateAllTimezones();
+        });
+    }
+
+    updateTimeTravelDisplay() {
+        const display = document.getElementById('timeTravelDisplay');
+        const hours = Math.floor(Math.abs(this.timeOffset) / 60);
+        const minutes = Math.abs(this.timeOffset) % 60;
+        const sign = this.timeOffset >= 0 ? '+' : '-';
+        display.textContent = `Offset: ${sign}${hours}h ${minutes}m`;
+
+        if (this.timeOffset !== 0) {
+            display.style.color = 'var(--accent-cyan)';
+        } else {
+            display.style.color = 'var(--text-primary)';
+        }
     }
 
     filterTimezones(searchTerm) {
@@ -703,15 +743,20 @@ class TimezoneTracker {
         card.innerHTML = `
             <div class="timezone-header">
                 <div class="timezone-name">${displayName}</div>
-                <button class="remove-btn" data-remove-timezone="${timezone}">&times;</button>
+                <button class="remove-btn" data-remove-timezone="${timezone}"><i class="ph ph-x"></i></button>
             </div>
-            <div class="time-display" data-time></div>
-            <div class="date-display" data-date></div>
-            <div class="timezone-info">
-                <div class="offset-display" data-offset></div>
-                <div class="time-diff" data-time-diff></div>
+            <div class="card-content-wrapper">
+                <div class="digital-info">
+                    <div class="time-display" data-time></div>
+                    <div class="date-display" data-date></div>
+                    <div class="timezone-info">
+                        <div class="offset-display" data-offset></div>
+                        <div class="time-diff" data-time-diff></div>
+                    </div>
+                    <div class="status-indicator" data-status></div>
+                </div>
+                <canvas class="clock-face" width="200" height="200"></canvas>
             </div>
-            <div class="status-indicator" data-status></div>
         `;
 
         grid.appendChild(card);
@@ -753,6 +798,8 @@ class TimezoneTracker {
         }
 
         const now = new Date();
+        // Apply time travel offset
+        now.setMinutes(now.getMinutes() + this.timeOffset);
 
         try {
             // Get time in timezone
@@ -796,16 +843,103 @@ class TimezoneTracker {
             }
 
             // Check business hours status
+            // Check business hours status
             if (statusDisplay) {
                 const status = this.getBusinessHoursStatus(timeStr);
-                statusDisplay.textContent = status.text;
+                statusDisplay.innerHTML = `<i class="ph ${status.icon}"></i> ${status.text}`;
                 statusDisplay.className = `status-indicator ${status.class}`;
+
+                // Update card background class
+                card.classList.remove('card-morning', 'card-working', 'card-evening', 'card-night');
+                card.classList.add(status.cardClass);
+            }
+
+            // Draw Analog Clock
+            const canvas = card.querySelector('.clock-face');
+            if (canvas) {
+                this.drawAnalogClock(canvas, timezone, now);
             }
 
             console.log('Card updated successfully for:', timezone);
         } catch (error) {
             console.error('Error updating timezone card:', timezone, error);
         }
+    }
+
+    drawAnalogClock(canvas, timezone, date) {
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const radius = width / 2;
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Get time components in target timezone
+        const timeStr = date.toLocaleTimeString('en-US', {
+            timeZone: timezone,
+            hour12: false,
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        });
+        const [h, m, s] = timeStr.split(':').map(Number);
+
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw Face
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 5, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.4)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(79, 172, 254, 0.2)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw Hour Marks
+        for (let i = 0; i < 12; i++) {
+            const angle = (i * 30) * Math.PI / 180;
+            const x1 = centerX + (radius - 15) * Math.cos(angle);
+            const y1 = centerY + (radius - 15) * Math.sin(angle);
+            const x2 = centerX + (radius - 5) * Math.cos(angle);
+            const y2 = centerY + (radius - 5) * Math.sin(angle);
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Draw Hands
+        // Hour
+        const hourAngle = ((h % 12) + m / 60) * 30 * Math.PI / 180 - Math.PI / 2;
+        this.drawHand(ctx, centerX, centerY, hourAngle, radius * 0.5, 4, '#ffffff');
+
+        // Minute
+        const minuteAngle = (m + s / 60) * 6 * Math.PI / 180 - Math.PI / 2;
+        this.drawHand(ctx, centerX, centerY, minuteAngle, radius * 0.7, 3, '#4facfe');
+
+        // Second
+        const secondAngle = s * 6 * Math.PI / 180 - Math.PI / 2;
+        this.drawHand(ctx, centerX, centerY, secondAngle, radius * 0.8, 1, '#d4af37');
+
+        // Center Dot
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#d4af37';
+        ctx.fill();
+    }
+
+    drawHand(ctx, x, y, angle, length, width, color) {
+        ctx.beginPath();
+        ctx.lineWidth = width;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = color;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + length * Math.cos(angle), y + length * Math.sin(angle));
+        ctx.stroke();
     }
 
     getTimeDifference(targetTz, sourceTz) {
@@ -830,14 +964,14 @@ class TimezoneTracker {
     getBusinessHoursStatus(timeStr) {
         const [hours] = timeStr.split(':').map(Number);
 
-        if (hours >= 9 && hours < 17) {
-            return { text: '💼 Working Hours', class: 'status-working' };
+        if (hours >= 6 && hours < 9) {
+            return { text: 'Morning', class: 'status-morning', icon: 'ph-sun', cardClass: 'card-morning' };
+        } else if (hours >= 9 && hours < 17) {
+            return { text: 'Working Hours', class: 'status-working', icon: 'ph-briefcase', cardClass: 'card-working' };
         } else if (hours >= 17 && hours < 22) {
-            return { text: '🌆 Evening', class: 'status-evening' };
-        } else if (hours >= 22 || hours < 6) {
-            return { text: '🌙 Night', class: 'status-night' };
+            return { text: 'Evening', class: 'status-evening', icon: 'ph-moon-stars', cardClass: 'card-evening' };
         } else {
-            return { text: '🌅 Morning', class: 'status-morning' };
+            return { text: 'Night', class: 'status-night', icon: 'ph-moon', cardClass: 'card-night' };
         }
     }
 
@@ -940,7 +1074,10 @@ class TimezoneTracker {
         // Display results
         resultsDiv.innerHTML = results.map(r => `
             <div class="conversion-result-item">
-                <div class="result-location">${r.displayName}</div>
+                <div class="result-header">
+                    <div class="result-location">${r.displayName}</div>
+                    <i class="ph ph-clock"></i>
+                </div>
                 <div class="result-time">${r.time}</div>
                 <div class="result-date">${r.date}</div>
             </div>
