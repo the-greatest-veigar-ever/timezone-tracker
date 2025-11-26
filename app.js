@@ -1003,8 +1003,12 @@ class TimezoneTracker {
     }
 
     updateAllTimezones() {
-        this.timezones.forEach(timezone => {
-            this.updateTimezoneCard(timezone);
+        const cards = document.querySelectorAll('.timezone-card');
+        cards.forEach(card => {
+            const timezone = card.dataset.timezone;
+            if (timezone) {
+                this.updateTimezoneCard(timezone, card);
+            }
         });
     }
 
